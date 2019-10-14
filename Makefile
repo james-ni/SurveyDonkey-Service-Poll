@@ -1,7 +1,8 @@
-APP_NAME = ServerlessDemo
-SERVICE_VERSION ?= v1
-SERVICE_NAME = Poll
+APP_NAME = SurveyDonkey
+APP_VERSION ?= v1
+SERVICE_NAME = poll
 APP_ENVIRONMENT ?= dev
+
 
 #Export Variables into child processes
 .EXPORT_ALL_VARIABLES:
@@ -17,6 +18,9 @@ deploy:
 	bash cicd/scripts/deploy.sh
 .PHONY: deploy
 
+deploy_api:
+	bash cicd/scripts/deploy_api.sh
+.PHONY: deploy_api
 
 clean:
 	bash cicd/scripts/clean.sh

@@ -16,7 +16,9 @@ Parameters:
   ServiceVersion:
     Type: String
     Default: v1
-  S3Dir:
+  CodeBucket:
+      Type: String
+  CodePrefix:
     Type: String
 
 
@@ -57,13 +59,30 @@ Resources:
       Timeout: 30
       Runtime: python3.6
       Code:
-        S3Bucket: jamesni-cloudformation-demo-2019
-        S3Key: !Sub '${S3Dir}/cf-demo.zip'
+        S3Bucket: !Sub '${CodeBucket}'
+        S3Key: !Sub '${CodePrefix}/${ServiceName}.zip'
       Role:
         Fn::GetAtt:
           - "DefaultLambdaExecutionRole"
           - "Arn"
       Handler: 'handlers/greeting.handler'
+
+  GoodbyeFunction:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      FunctionName: 'Goodbye'
+      Description: 'say goodbye to users'
+      MemorySize: 128
+      Timeout: 30
+      Runtime: python3.6
+      Code:
+        S3Bucket: !Sub '${CodeBucket}'
+        S3Key: !Sub '${CodePrefix}/${ServiceName}.zip'
+      Role:
+        Fn::GetAtt:
+          - "DefaultLambdaExecutionRole"
+          - "Arn"
+      Handler: 'handlers/goodbye.handler'
 
 
 

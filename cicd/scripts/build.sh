@@ -1,4 +1,5 @@
+rm -rf output/
 echo "building..."
 mkdir output
 cd src
-zip -R ../output/cf-demo.zip '*.py'
+zip -R ../output/${SERVICE_NAME}.zip '*.py'
