@@ -3,6 +3,41 @@ pipeline {
   agent any
 
   stages {
+    stage('SonarQube Analysis') {
+      steps {
+        script {
+          // requires SonarQube Scanner 2.8+
+          scannerHome = tool 'SonarQube Scanner 4.2'
+
+          SOURCE_BRANCH = env.BRANCH_NAME
+          TARGET_BRANCH = ""
+          if (SOURCE_BRANCH != 'master') {
+            TARGET_BRANCH = "master"
+          }
+        }
+        withCredentials([string(credentialsId: 'sonarqube-token', variable: 'sonarLogin')]) {
+          withSonarQubeEnv('SonarCloud') {
+            sh "${scannerHome}/bin/sonar-scanner \
+              -Dsonar.host.url=https://sonarcloud.io \
+              -Dsonar.organization=james-ni \
+              -Dsonar.login=${sonarLogin} \
+              -Dsonar.projectName=surveydonkey \
+              -Dsonar.projectVersion=${env.BUILD_NUMBER} \
+              -Dsonar.projectKey=surveydonkey.service.poll \
+              -Dsonar.branch.name=${SOURCE_BRANCH} \
+              -Dsonar.branch.target=${TARGET_BRANCH} \
+              -Dsonar.sources=src/"
+          }
+        }
+      }
+    }
+    stage("Quality Gate") {
+        steps {
+            timeout(time: 60, unit: 'SECONDS') {
+                waitForQualityGate abortPipeline: true
+            }
+        }
+    }
     stage("build") {
       steps {
         sh 'make build'
