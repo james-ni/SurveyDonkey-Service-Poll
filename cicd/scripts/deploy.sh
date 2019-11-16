@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 echo "deploying..."
 echo ${APP_NAME}
 

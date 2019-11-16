@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 #curl -X PUT http://localhost:8001/plugins/awslambda-plugin-greeting \
 #    --data "name=aws-lambda"  \
 #    --data-urlencode "config.aws_key=AKIAT2QT7NLQ42SACD3T" \
