@@ -8,7 +8,7 @@ pipeline {
         script {
           scannerHome = tool 'SonarQube Scanner 4.2'
 
-          if(CHANGE_ID){
+          if(env.CHANGE_ID){
             ADDITIONAL_ARG='-Dsonar.pullrequest.key=$CHANGE_ID -Dsonar.pullrequest.branch=$BRANCH_NAME'
           } else{
             ADDITIONAL_ARG='-Dsonar.branch.name=$BRANCH_NAME'
