@@ -8,7 +8,7 @@ APP_ENVIRONMENT ?= dev
 .EXPORT_ALL_VARIABLES:
 
 lint:
-	echo helloworld
+	echo helloworldyy
 .PHONY: lint
 
 build:
