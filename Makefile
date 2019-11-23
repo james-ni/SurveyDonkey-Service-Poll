@@ -7,7 +7,9 @@ APP_ENVIRONMENT ?= dev
 #Export Variables into child processes
 .EXPORT_ALL_VARIABLES:
 
-
+lint:
+	echo hello
+.PHONY: lint
 
 build:
 	bash cicd/scripts/build.sh
