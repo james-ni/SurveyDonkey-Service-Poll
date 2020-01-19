@@ -20,7 +20,7 @@ echo "building..."
 cd ${PROJECT_DIR}
 pip3 install -r requirements.txt -t ${PROJECT_DIR}/output/lib
 cd ${PROJECT_DIR}/output/lib
-zip -r ${OUTPUT_DIR}/${SERVICE_NAME}.zip .
+zip -r ${OUTPUT_DIR}/pythonlibs.zip .
 rm -rf lib
 
 # build src code

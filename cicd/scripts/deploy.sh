@@ -13,7 +13,7 @@ deploytime=`date +%Y%m%d%H%M%S`
 CODE_PREFIX="${APP_NAME}-${APP_ENVIRONMENT}-${SERVICE_NAME}-${APP_VERSION}-${deploytime}"
 
 aws s3 cp output/build/${SERVICE_NAME}.zip s3://${CODE_BUCKET}/${CODE_PREFIX}/${SERVICE_NAME}.zip
-
+aws s3 cp output/build/pythonlibs.zip s3://${CODE_BUCKET}/${CODE_PREFIX}/pythonlibs.zip
 aws cloudformation deploy \
     --stack-name ${APP_NAME}-${APP_ENVIRONMENT}-${SERVICE_NAME}-${APP_VERSION}-${APP_ENVIRONMENT} \
     --template-file cfn/template.yaml \

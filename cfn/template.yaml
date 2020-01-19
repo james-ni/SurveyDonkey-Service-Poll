@@ -50,11 +50,23 @@ Resources:
       Roles:
         - Ref: "DefaultLambdaExecutionRole"
 
+  ## Layers
+  PythonLibs:
+    Type: AWS::Lambda::LayerVersion
+    Properties:
+      CompatibleRuntimes: [python3.6]
+      LayerName: !Sub '${AppName}-${Environment}-${ServiceName}-Greeting-${AppVersion}'
+      Content:
+        S3Bucket: !Sub '${CodeBucket}'
+        S3Key: !Sub '${CodePrefix}/pythonlibs.zip'
+
+  ## Functions
   GreetingFunction:
     Type: 'AWS::Lambda::Function'
     Properties:
       FunctionName: !Sub '${AppName}-${Environment}-${ServiceName}-Greeting-${AppVersion}'
       Description: 'say hello to users'
+      Layers: [!Ref PythonLibs]
       MemorySize: 128
       Timeout: 30
       Runtime: python3.6
@@ -66,12 +78,16 @@ Resources:
           - "DefaultLambdaExecutionRole"
           - "Arn"
       Handler: 'handlers/greeting.handler'
+      Environment:
+        Variables:
+          PYTHONPATH: "/opt:/opt/lib"
 
   GoodbyeFunction:
     Type: 'AWS::Lambda::Function'
     Properties:
       FunctionName: !Sub '${AppName}-${Environment}-${ServiceName}-Goodbye-${AppVersion}'
       Description: 'say goodbye to users'
+      Layers: [!Ref PythonLibs]
       MemorySize: 128
       Timeout: 30
       Runtime: python3.6
@@ -83,12 +99,16 @@ Resources:
           - "DefaultLambdaExecutionRole"
           - "Arn"
       Handler: 'handlers/goodbye.handler'
+      Environment:
+        Variables:
+          PYTHONPATH: "/opt:/opt/lib"
 
   CreatePollFunction:
     Type: 'AWS::Lambda::Function'
     Properties:
       FunctionName: !Sub '${AppName}-${Environment}-${ServiceName}-CreatePoll-${AppVersion}'
       Description: 'create a poll'
+      Layers: [!Ref PythonLibs]
       MemorySize: 128
       Timeout: 30
       Runtime: python3.6
@@ -100,12 +120,16 @@ Resources:
           - "DefaultLambdaExecutionRole"
           - "Arn"
       Handler: 'handlers/create_poll.handler'
+      Environment:
+        Variables:
+          PYTHONPATH: "/opt:/opt/lib"
 
   UpdateDBFunction:
     Type: 'AWS::Lambda::Function'
     Properties:
       FunctionName: !Sub '${AppName}-${Environment}-${ServiceName}-UpdateDB-${AppVersion}'
       Description: 'database migration of Poll service'
+      Layers: [!Ref PythonLibs]
       MemorySize: 128
       Timeout: 30
       Runtime: python3.6
@@ -117,6 +141,9 @@ Resources:
           - "DefaultLambdaExecutionRole"
           - "Arn"
       Handler: 'handlers/update_db.handler'
+      Environment:
+        Variables:
+          PYTHONPATH: "/opt:/opt/lib"
 
   MyCustomResource:
     Type: "Custom::TestLambdaCrossStackRef"
