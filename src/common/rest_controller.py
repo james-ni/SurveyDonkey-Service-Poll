@@ -46,8 +46,9 @@ def rest_controller(require_auth=None):
 def get_token_auth_header(event):
     """Obtains the Access Token from the Authorization Header
     """
+    print(event)
     try:
-        auth = event['request_headers']["Authorization"]
+        auth = event['request_headers']["authorization"]
     except KeyError:
         auth = ""
 
