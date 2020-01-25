@@ -20,6 +20,16 @@ Parameters:
       Type: String
   CodePrefix:
     Type: String
+  FlywayLayerName:
+    Type: String
+  RDSEndpoint:
+    Type: String
+  DBUser:
+    Type: String
+  DBPass:
+    Type: String
+  DBSchema:
+    Type: String
 
 
 Resources:
@@ -55,10 +65,19 @@ Resources:
     Type: AWS::Lambda::LayerVersion
     Properties:
       CompatibleRuntimes: [python3.6]
-      LayerName: !Sub '${AppName}-${Environment}-${ServiceName}-Greeting-${AppVersion}'
+      LayerName: !Sub '${AppName}-${Environment}-${ServiceName}-PythonLibs-${AppVersion}'
       Content:
         S3Bucket: !Sub '${CodeBucket}'
         S3Key: !Sub '${CodePrefix}/pythonlibs.zip'
+
+  SQLScripts:
+    Type: AWS::Lambda::LayerVersion
+    Properties:
+      CompatibleRuntimes: [python3.6]
+      LayerName: !Sub '${AppName}-${Environment}-${ServiceName}-SQLScripts-${AppVersion}'
+      Content:
+        S3Bucket: !Sub '${CodeBucket}'
+        S3Key: !Sub '${CodePrefix}/sqlscripts.zip'
 
   ## Functions
   GreetingFunction:
@@ -129,7 +148,11 @@ Resources:
     Properties:
       FunctionName: !Sub '${AppName}-${Environment}-${ServiceName}-UpdateDB-${AppVersion}'
       Description: 'database migration of Poll service'
-      Layers: [!Ref PythonLibs]
+      Layers:
+        - !Ref PythonLibs
+        - !Ref SQLScripts
+        - Fn::ImportValue:
+            !Sub "${FlywayLayerName}"
       MemorySize: 128
       Timeout: 30
       Runtime: python3.6
@@ -144,6 +167,10 @@ Resources:
       Environment:
         Variables:
           PYTHONPATH: "/opt:/opt/lib"
+          RDS_ENDPOINT: !Sub '${RDSEndpoint}'
+          DB_USER: !Sub '${DBUser}'
+          DB_PASS: !Sub '${DBPass}'
+          DB_SCHEMA: !Sub '${DBSchema}'
 
   MyCustomResource:
     Type: "Custom::TestLambdaCrossStackRef"

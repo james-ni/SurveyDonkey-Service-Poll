@@ -27,3 +27,8 @@ rm -rf lib
 cd ${PROJECT_SRC_DIR}
 zip -R ${OUTPUT_DIR}/${SERVICE_NAME}.zip '*.py'
 
+cd ${PROJECT_DIR}
+if [[ -d ${PROJECT_DIR}/db ]]; then
+    zip -r ${OUTPUT_DIR}/sqlscripts.zip ./db -i '*.sql'
+fi
+
