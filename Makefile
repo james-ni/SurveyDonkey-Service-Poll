@@ -19,8 +19,8 @@ db_clean:
 	docker-compose run flyway clean
 .PHONY: db_clean
 
-build:
-	bash cicd/scripts/build.sh
+build: .env
+	docker-compose run --rm python bash cicd/scripts/build.sh
 .PHONY: build
 
 deploy:
@@ -35,3 +35,7 @@ clean:
 	docker-compose down --remove-orphans
 	bash cicd/scripts/clean.sh
 .PHONY: clean
+
+# create .env with .env.template if it doesn't exist already
+.env:
+	cp .env.template .env
