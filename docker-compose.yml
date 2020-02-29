@@ -20,6 +20,6 @@ services:
     image: lambci/lambda:build-python3.6
     env_file: .env
     volumes:
-      - .:/app
+      - ${PROJECT_MOUNT_POINT}:/app
     working_dir: /app
 

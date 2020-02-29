@@ -3,6 +3,14 @@ APP_VERSION ?= v1
 SERVICE_NAME = poll
 APP_ENVIRONMENT ?= dev
 
+UNAME := $(shell uname)
+JENKINS_VOLUME := /var/lib/docker/volumes/surveydonkey-infra-common_jenkins_home/_data
+
+ifeq ($(UNAME), Darwin)
+	PROJECT_MOUNT_POINT ?= .
+else
+	PROJECT_MOUNT_POINT ?= $(JENKINS_VOLUME)/workspace/$(shell basename $(PWD))
+endif
 
 #Export Variables into child processes
 .EXPORT_ALL_VARIABLES:
